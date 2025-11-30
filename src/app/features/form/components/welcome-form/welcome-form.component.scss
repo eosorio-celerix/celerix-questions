@@ -1,0 +1,464 @@
+// Using Tailwind classes in component
+.form-container {
+  @apply flex justify-center items-start min-h-screen py-8 px-4;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.form-card {
+  @apply w-full max-w-4xl shadow-2xl rounded-xl overflow-hidden;
+}
+
+mat-card-content {
+  @apply p-8;
+}
+
+.form-stepper {
+  @apply bg-transparent;
+}
+
+.form-step-content {
+  @apply py-6;
+}
+
+.step-title {
+  @apply text-2xl font-medium mb-2 text-gray-800;
+}
+
+.step-subtitle {
+  @apply text-base text-gray-600 mb-8 italic;
+}
+
+.form-row {
+  @apply flex gap-4 mb-4 flex-wrap;
+}
+
+.full-width {
+  @apply w-full;
+}
+
+.half-width {
+  @apply flex-1 min-w-[250px];
+}
+
+// Tailwind styled form fields
+.form-field {
+  @apply w-full mb-4;
+}
+
+.form-label {
+  @apply block mb-2 text-sm font-normal;
+  color: #424242;
+}
+
+.form-label-required {
+  @apply text-base font-medium ml-1;
+  color: #ff0000;
+}
+
+.form-input-wrapper {
+  @apply relative;
+
+  // For percentage suffix in energy fields
+  .absolute {
+    position: absolute;
+  }
+}
+
+.form-input {
+  @apply w-full rounded border text-base;
+  padding: 0 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: #e0e0e0;
+  color: #1976d2;
+  height: 36px;
+
+  &:focus {
+    @apply outline-none border-2;
+    border-color: #000000;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  &::placeholder {
+    @apply text-gray-400;
+  }
+
+  &.invalid {
+    @apply border-red-500;
+  }
+}
+
+.form-textarea {
+  @apply w-full rounded border text-base resize-y;
+  padding: 0 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: #e0e0e0;
+  color: #1976d2;
+  min-height: 100px;
+
+  &:focus {
+    @apply outline-none border-2;
+    border-color: #000000;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  &::placeholder {
+    @apply text-gray-400;
+  }
+
+  &.invalid {
+    @apply border-red-500;
+  }
+}
+
+.form-select {
+  @apply w-full rounded border text-base;
+  padding: 0 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-color: #e0e0e0;
+  color: #1976d2;
+  height: 36px;
+
+  &:focus {
+    @apply outline-none border-2;
+    border-color: #000000;
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  &.invalid {
+    @apply border-red-500;
+  }
+}
+
+.form-error {
+  @apply text-red-500 text-xs mt-1 block;
+}
+
+.form-icon {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none;
+}
+
+.form-input-with-icon {
+  @apply pl-10;
+}
+
+// Phone input with country selector
+.phone-input-wrapper {
+  @apply flex items-center relative;
+}
+
+.phone-country-selector {
+  @apply relative;
+}
+
+.phone-country-button {
+  @apply flex items-center gap-2 px-3 h-[36px] border border-gray-300 rounded-l bg-white cursor-pointer;
+  border-right: none;
+  border-color: #e0e0e0;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &:focus {
+    @apply outline-none;
+  }
+}
+
+.phone-flag {
+  @apply text-lg;
+}
+
+.phone-code {
+  @apply text-sm font-medium text-gray-700;
+}
+
+.phone-chevron {
+  @apply text-xs text-gray-500 ml-1;
+  font-size: 8px;
+}
+
+.phone-country-dropdown {
+  @apply absolute top-full left-0 mt-1 bg-white border border-gray-300 rounded shadow-lg z-50 max-h-60 overflow-y-auto;
+  display: none;
+  min-width: 200px;
+
+  &.show {
+    display: block;
+  }
+}
+
+.phone-country-option {
+  @apply flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100;
+
+  .phone-flag {
+    @apply text-lg;
+  }
+
+  .phone-code {
+    @apply text-sm font-medium text-gray-700 w-12;
+  }
+
+  .phone-name {
+    @apply text-sm text-gray-600 flex-1;
+  }
+}
+
+.phone-input {
+  @apply flex-1 rounded-l-none;
+  border-left: none;
+
+  &:focus {
+    border-left: 2px solid #000000;
+  }
+}
+
+.form-section {
+  @apply mb-10 pb-8 border-b border-gray-300;
+
+  &:last-of-type {
+    @apply border-b-0 mb-0 pb-0;
+  }
+}
+
+.section-title {
+  @apply text-xl font-medium mb-6 text-indigo-500 pb-2 border-b-2 border-indigo-500;
+}
+
+.section-description {
+  @apply text-[0.95rem] text-gray-600 mb-6 leading-relaxed;
+}
+
+.energy-distribution {
+  @apply mb-6;
+}
+
+.energy-field {
+  @apply flex-1 min-w-[150px];
+}
+
+.percentage-sum {
+  @apply mt-4 p-3 bg-gray-100 rounded text-center text-lg;
+
+  &.invalid {
+    @apply bg-red-50 text-red-800;
+  }
+
+  .error-text {
+    @apply block text-sm mt-1 text-red-800;
+  }
+}
+
+.scenario-text {
+  @apply text-base text-gray-800 mb-6 leading-relaxed p-4 bg-gray-50 rounded border-l-4 border-indigo-500;
+}
+
+.scenario-options {
+  @apply mb-4;
+}
+
+.scenario-option {
+  @apply block mb-3 p-2;
+
+  ::ng-deep .mdc-radio {
+    @apply mr-2;
+  }
+}
+
+.question-display {
+  @apply bg-gray-100 rounded-lg p-6 my-6 border-l-4 border-indigo-500;
+}
+
+.question-label {
+  @apply text-sm font-medium text-indigo-500 m-0 mb-2 uppercase tracking-wide;
+}
+
+.question-text {
+  @apply text-lg text-gray-800 m-0 italic leading-relaxed;
+}
+
+.field-label {
+  @apply block mb-2 text-sm font-medium text-gray-900;
+}
+
+.required-asterisk {
+  @apply text-indigo-500 ml-0.5;
+}
+
+.language-levels {
+  @apply flex flex-col gap-3 mb-4;
+}
+
+.language-button {
+  @apply flex items-center gap-3 px-4 bg-white rounded-lg border cursor-pointer transition-all;
+  width: 129.03px;
+  height: 35.99px;
+  border-width: 1px;
+  border-color: #e0e0e0;
+  color: #1976d2;
+
+  .language-icon {
+    @apply flex items-center justify-center rounded text-white font-bold;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    background-color: #42a5f5;
+  }
+
+  .language-text {
+    @apply text-sm font-medium;
+    color: #1976d2;
+  }
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &.selected {
+    border-width: 3px;
+    border-color: #9c27b0;
+
+    .language-icon {
+      background-color: #9c27b0;
+    }
+
+    .language-text {
+      color: #1976d2;
+    }
+  }
+}
+
+.error-message {
+  @apply text-red-500 text-xs -mt-4 mb-4 block;
+}
+
+.form-actions {
+  @apply flex justify-between gap-4 mt-8 pt-6 border-t border-gray-300;
+
+  button {
+    @apply flex items-center gap-2;
+  }
+}
+
+.confirmation-content {
+  @apply py-8 text-center;
+}
+
+.confirmation-message {
+  @apply text-lg text-green-600 mb-8;
+}
+
+.final-content {
+  @apply py-12 px-8 text-center min-h-[400px] flex flex-col justify-center items-center;
+}
+
+.final-title {
+  @apply text-3xl font-medium mb-10 text-gray-800;
+}
+
+.final-message {
+  @apply max-w-2xl mb-12;
+}
+
+.final-text {
+  @apply text-lg leading-relaxed text-gray-800 mb-6;
+
+  &:last-child {
+    @apply mb-0;
+  }
+}
+
+.final-actions {
+  @apply mt-8 flex justify-between items-center gap-4 w-full max-w-2xl;
+}
+
+.back-button {
+  @apply flex items-center gap-2 text-indigo-500;
+
+  mat-icon {
+    @apply mr-0;
+  }
+}
+
+.submit-button {
+  @apply py-4 px-12 text-lg font-medium min-w-[200px] ml-auto;
+  background: #6a3e9b !important;
+
+  &:hover {
+    background: #5a2e8b !important;
+  }
+
+  &:disabled {
+    @apply bg-gray-400;
+  }
+}
+
+.summary-card {
+  @apply bg-gray-100 rounded-lg p-6 my-8 text-left;
+}
+
+.summary-card h3 {
+  @apply mt-0 mb-4 text-gray-800 text-xl;
+}
+
+.summary-item {
+  @apply py-3 border-b border-gray-300;
+
+  &:last-child {
+    @apply border-b-0;
+  }
+
+  strong {
+    @apply text-indigo-500 mr-2;
+  }
+}
+
+::ng-deep .mat-step-header {
+  @apply pointer-events-none;
+}
+
+::ng-deep .mat-step-label {
+  @apply font-medium;
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    @apply py-4 px-2;
+  }
+
+  .welcome-title {
+    @apply text-3xl;
+  }
+
+  .form-row {
+    @apply flex-col;
+  }
+
+  .half-width {
+    @apply w-full min-w-full;
+  }
+
+  mat-card-content {
+    @apply p-4;
+  }
+
+  .form-actions {
+    @apply flex-col;
+
+    button {
+      @apply w-full;
+    }
+  }
+
+  .language-levels {
+    @apply flex-col;
+  }
+
+  .language-button {
+    width: 129.03px;
+    height: 35.99px;
+  }
+
+  .form-section {
+    @apply mb-8 pb-6;
+  }
+}
