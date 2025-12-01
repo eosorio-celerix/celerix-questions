@@ -1,6 +1,8 @@
 <div class="form-container">
   <mat-card class="form-card">
     <mat-card-content>
+      <h1 class="welcome-main-title">¡Bienvenid@!</h1>
+
       <form [formGroup]="personalInfoForm" (ngSubmit)="onSubmit(stepper)">
         <mat-stepper #stepper linear="true" class="form-stepper">
           <!-- Step 1: Personal Information -->
@@ -8,12 +10,12 @@
             <ng-template matStepLabel>Personal Information</ng-template>
 
             <div class="form-step-content">
-              <h2 class="step-title">Personal Information</h2>
+              <h2 class="step-title">Tu información básica (pero poderosa)</h2>
 
               <div class="form-row">
                 <div class="form-field full-width">
                   <label class="form-label">
-                    Full Name
+                    Nombre completo:
                     <span class="form-label-required">*</span>
                   </label>
                   <div class="form-input-wrapper">
@@ -33,7 +35,7 @@
               <div class="form-row">
                 <div class="form-field full-width">
                   <label class="form-label">
-                    Identity Document
+                    Documento de identidad:
                     <span class="form-label-required">*</span>
                   </label>
                   <div class="form-input-wrapper">
@@ -56,11 +58,12 @@
               <div class="form-row">
                 <div class="form-field half-width">
                   <label class="form-label">
-                    Birth Date
+                    Fecha de nacimiento:
                     <span class="form-label-required">*</span>
                   </label>
                   <div class="form-input-wrapper">
                     <input
+                      #birthDateInput
                       matInput
                       type="text"
                       formControlName="birthDate"
@@ -70,7 +73,10 @@
                       (focus)="birthDatePicker.open()"
                       readonly
                     />
-                    <mat-datepicker #birthDatePicker></mat-datepicker>
+                    <mat-datepicker
+                      #birthDatePicker
+                      (closed)="onDatepickerClosed(birthDateInput)"
+                    ></mat-datepicker>
                   </div>
                   <span *ngIf="isFieldInvalid('birthDate')" class="form-error">
                     {{ getErrorMessage("birthDate") }}
@@ -79,7 +85,7 @@
 
                 <div class="form-field half-width">
                   <label class="form-label">
-                    Birth Place
+                    Lugar de nacimiento:
                     <span class="form-label-required">*</span>
                   </label>
                   <div class="form-input-wrapper">
@@ -99,7 +105,7 @@
               <div class="form-row">
                 <div class="form-field full-width">
                   <label class="form-label">
-                    Email
+                    Correo electrónico:
                     <span class="form-label-required">*</span>
                   </label>
                   <div class="form-input-wrapper">
@@ -119,7 +125,7 @@
               <div class="form-row">
                 <div class="form-field half-width">
                   <label class="form-label">
-                    City
+                    Ciudad dondo vives:
                     <span class="form-label-required">*</span>
                   </label>
                   <div class="form-input-wrapper">
@@ -137,7 +143,7 @@
 
                 <div class="form-field half-width">
                   <label class="form-label">
-                    Country
+                    País donde vives:
                     <span class="form-label-required">*</span>
                   </label>
                   <div class="form-input-wrapper">
@@ -146,7 +152,7 @@
                       class="form-select"
                       [class.invalid]="isFieldInvalid('country')"
                     >
-                      <option value="" disabled>Select your country</option>
+                      <option value="" disabled></option>
                       <option
                         *ngFor="let country of countries"
                         [value]="country"
@@ -164,7 +170,7 @@
               <div class="form-row">
                 <div class="form-field full-width">
                   <label class="form-label">
-                    Phone Number
+                    Número de teléfono:
                     <span class="form-label-required">*</span>
                   </label>
                   <div class="phone-input-wrapper">
@@ -220,12 +226,11 @@
                 color="primary"
                 type="submit"
                 [disabled]="isSubmitting || personalInfoForm.invalid"
+                class="next-button"
               >
-                <span *ngIf="!isSubmitting">Next</span>
+                <span *ngIf="!isSubmitting">Siguiente</span>
                 <span *ngIf="isSubmitting">Submitting...</span>
-              </button>
-              <button mat-button type="button" (click)="onReset()">
-                Reset
+                <mat-icon>arrow_forward</mat-icon>
               </button>
             </div>
           </mat-step>
@@ -235,16 +240,14 @@
             <ng-template matStepLabel>Professional Information</ng-template>
 
             <div class="form-step-content" [formGroup]="professionalInfoForm">
-              <h2 class="step-title">Your Professional History</h2>
+              <h2 class="step-title">Tu historial profesional</h2>
 
               <!-- Professional History Section -->
               <div class="form-section">
-                <h3 class="section-title">Your Professional History</h3>
-
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      School
+                      Colegio:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -269,7 +272,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Undergraduate / Postgraduate / Master's
+                      Pregrado / Postgrado / Maestría:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -294,12 +297,12 @@
 
               <!-- Work Experience Section -->
               <div class="form-section">
-                <h3 class="section-title">Work Experience</h3>
+                <h3 class="section-title">Experiencia laboral</h3>
 
                 <div class="form-row">
                   <div class="form-field half-width">
                     <label class="form-label">
-                      Company
+                      Empresa:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -322,7 +325,7 @@
 
                   <div class="form-field half-width">
                     <label class="form-label">
-                      Position
+                      Cargo:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -347,11 +350,12 @@
                 <div class="form-row">
                   <div class="form-field half-width">
                     <label class="form-label">
-                      Start Date
+                      Fecha de inicio:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
                       <input
+                        #startDateInput
                         matInput
                         type="text"
                         formControlName="startDate"
@@ -363,7 +367,10 @@
                         (focus)="startDatePicker.open()"
                         readonly
                       />
-                      <mat-datepicker #startDatePicker></mat-datepicker>
+                      <mat-datepicker
+                        #startDatePicker
+                        (closed)="onDatepickerClosed(startDateInput)"
+                      ></mat-datepicker>
                     </div>
                     <span
                       *ngIf="isFieldInvalid('startDate', professionalInfoForm)"
@@ -375,27 +382,22 @@
 
                   <div class="form-field half-width">
                     <label class="form-label">
-                      End Date
+                      Fecha de finalización:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
                       <input
-                        matInput
                         type="text"
                         formControlName="endDate"
                         class="form-input"
                         [class.invalid]="
                           isFieldInvalid('endDate', professionalInfoForm)
                         "
-                        [matDatepicker]="endDatePicker"
-                        (focus)="endDatePicker.open()"
-                        readonly
                       />
-                      <mat-datepicker #endDatePicker></mat-datepicker>
                     </div>
                     <span class="text-xs text-gray-500 mt-1 block">
-                      If you are currently at the company, add today's date and
-                      write "Currently" here
+                      Si actualmente estás en la empresa, agrega la fecha actual
+                      y escribe "Actualmente" aquí
                     </span>
                     <span
                       *ngIf="isFieldInvalid('endDate', professionalInfoForm)"
@@ -409,7 +411,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Immediate Leader
+                      Líder inmediato:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -441,7 +443,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Main Responsibilities
+                      Principales responsabilidades:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -479,7 +481,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Achievements You Are Proud Of
+                      Logros que te enorgullecen:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -508,7 +510,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Why Did You Decide to Close That Cycle?
+                      ¿Por qué decidiste cerrar ese ciclo?
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -537,12 +539,12 @@
 
               <!-- Languages Section -->
               <div class="form-section">
-                <h3 class="section-title">Languages You Speak</h3>
+                <h3 class="section-title">Idiomas que hablas</h3>
 
                 <div class="form-row">
                   <div class="full-width">
                     <label class="field-label"
-                      >English <span class="required-asterisk">*</span></label
+                      >Inglés <span class="required-asterisk">*</span></label
                     >
                     <div class="language-levels">
                       <button
@@ -599,7 +601,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Where Did You Learn It?
+                      ¿Dónde aprendiste?
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -637,7 +639,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Another Language?
+                      ¿Otro idioma?
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -673,7 +675,7 @@
                   "
                 >
                   <div class="full-width">
-                    <label class="field-label">Other Language Level</label>
+                    <label class="field-label">Nivel de otro idioma</label>
                     <div class="language-levels">
                       <button
                         type="button"
@@ -735,7 +737,7 @@
             <div class="form-actions">
               <button mat-button type="button" (click)="stepper.previous()">
                 <mat-icon>arrow_back</mat-icon>
-                Back
+                Atrás
               </button>
               <button
                 mat-raised-button
@@ -744,7 +746,7 @@
                 (click)="onSubmitProfessional(stepper)"
                 [disabled]="isSubmitting || professionalInfoForm.invalid"
               >
-                <span *ngIf="!isSubmitting">Next</span>
+                <span *ngIf="!isSubmitting">Siguiente</span>
                 <span *ngIf="isSubmitting">Submitting...</span>
                 <mat-icon>arrow_forward</mat-icon>
               </button>
@@ -756,15 +758,16 @@
             <ng-template matStepLabel>Additional Information</ng-template>
 
             <div class="form-step-content" [formGroup]="additionalInfoForm">
-              <h2 class="step-title">A Little More About You</h2>
-              <p class="step-subtitle">(What doesn't appear on a resume)</p>
+              <h2 class="step-title">
+                Un poco más sobre tí (lo que no sale en una hoja de vida)
+              </h2>
 
               <div class="form-section">
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      What do you like to be called? (Can be your name or a
-                      diminutive)
+                      ¿Cómo te gustaría que te llamen? (Puede ser tu nombre o un
+                      diminutivo)
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -791,9 +794,9 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      What is your superpower and what is your kryptonite? (That
-                      ability that makes you shine... and that sometimes works
-                      against you).
+                      ¿Cuál es tu superpoder y cuál es tu kryptonita? (Esa
+                      habilidad que te hace brillar... y que a veces te funciona
+                      en tu contra).
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -831,8 +834,8 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      What caught your attention most about this opportunity and
-                      Celerix? (We want to know what connected with you)
+                      ¿Qué te atrajo más sobre esta oportunidad y Celerix?
+                      (Queremos saber qué conectó contigo)
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -870,9 +873,9 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      What makes your way of working or seeing the world unique?
-                      (That spark that differentiates you, even among people
-                      with similar skills)
+                      ¿Que hace único tu estilo de trabajo o ver el mundo? (Esa
+                      chispa que te diferencia, incluso entre personas con
+                      habilidades similares)
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -901,9 +904,9 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      If you could ask us a question to better get to know new
-                      candidates like you... what would it be? Propose it! We
-                      love to add new ideas.
+                      Si supieras hacernos una pregunta para conocer a nuevos
+                      candidatos como tú... ¿qué sería? ¡Proponela! Nos encanta
+                      agregar nuevas ideas.
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -943,7 +946,7 @@
             <div class="form-actions">
               <button mat-button type="button" (click)="stepper.previous()">
                 <mat-icon>arrow_back</mat-icon>
-                Back
+                Atrás
               </button>
               <button
                 mat-raised-button
@@ -952,7 +955,7 @@
                 (click)="onSubmitAdditional(stepper)"
                 [disabled]="isSubmitting || additionalInfoForm.invalid"
               >
-                <span *ngIf="!isSubmitting">Next</span>
+                <span *ngIf="!isSubmitting">Siguiente</span>
                 <span *ngIf="isSubmitting">Submitting...</span>
                 <mat-icon>arrow_forward</mat-icon>
               </button>
@@ -964,21 +967,20 @@
             <ng-template matStepLabel>Energy & Scenario</ng-template>
 
             <div class="form-step-content" [formGroup]="energyScenarioForm">
-              <h2 class="step-title">Where Do You Put Your Energy?</h2>
+              <h2 class="step-title">En qué te gasta tu energía?</h2>
 
               <div class="form-section">
                 <p class="section-description">
-                  If your expectations and motivations added up to 100%, how
-                  would you distribute that percentage among these aspects?
-                  (Remember: no repetition allowed. The idea is that you
-                  prioritize what you value most today)
+                  ¿Si tus expectativas y motivaciones sumaran 100%, ¿cómo
+                  repartirías ese porcentaje entre estos aspectos? (Recuerda: no
+                  se vale repetir La idea es que priorices lo que más valoras
+                  hoy)
                 </p>
 
                 <div class="energy-distribution">
                   <div class="form-row">
                     <div class="form-field energy-field">
                       <label class="form-label">
-                        {{ energyAspects[0] }}
                         <span class="form-label-required">*</span>
                       </label>
                       <div class="form-input-wrapper">
@@ -1012,7 +1014,6 @@
 
                     <div class="form-field energy-field">
                       <label class="form-label">
-                        {{ energyAspects[1] }}
                         <span class="form-label-required">*</span>
                       </label>
                       <div class="form-input-wrapper">
@@ -1046,7 +1047,6 @@
 
                     <div class="form-field energy-field">
                       <label class="form-label">
-                        {{ energyAspects[2] }}
                         <span class="form-label-required">*</span>
                       </label>
                       <div class="form-input-wrapper">
@@ -1080,7 +1080,6 @@
 
                     <div class="form-field energy-field">
                       <label class="form-label">
-                        {{ energyAspects[3] }}
                         <span class="form-label-required">*</span>
                       </label>
                       <div class="form-input-wrapper">
@@ -1112,30 +1111,17 @@
                       </span>
                     </div>
                   </div>
-
-                  <div
-                    class="percentage-sum"
-                    [class.invalid]="energyScenarioForm.errors?.['invalidPercentageSum']"
-                  >
-                    <strong>Total: {{ getEnergyPercentageSum() }}%</strong>
-                    <span
-                      *ngIf="energyScenarioForm.errors?.['invalidPercentageSum']"
-                      class="error-text"
-                    >
-                      (Must equal 100%)
-                    </span>
-                  </div>
                 </div>
               </div>
 
               <div class="form-section">
-                <h3 class="section-title">
-                  And If You Were In This Situation...
-                </h3>
+                <h4 class="section-title">
+                  Y si estuvieras en esta situación...
+                </h4>
                 <p class="scenario-text">
-                  You are in a meeting with your boss and part of the Celerix
-                  management team. Suddenly, your boss projects some figures
-                  that you know are incorrect. What do you do?
+                  Estás en una reunión con tu jefe y parte del equipo de gestión
+                  de Celerix. De repente, tu jefe proyecta algunos datos que
+                  sabes que son incorrectos. ¿Qué haces?
                 </p>
 
                 <div class="scenario-options">
@@ -1159,8 +1145,8 @@
                 <div class="form-row" style="margin-top: 1.5rem">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Tell us what you would do and why. The important thing is
-                      not just the "what", but the "how".
+                      Cuentanos qué harías y por qué. Lo importante no es solo
+                      el "qué", sino el "cómo".
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -1200,7 +1186,7 @@
             <div class="form-actions">
               <button mat-button type="button" (click)="stepper.previous()">
                 <mat-icon>arrow_back</mat-icon>
-                Back
+                Atrás
               </button>
               <button
                 mat-raised-button
@@ -1209,7 +1195,7 @@
                 (click)="onSubmitEnergyScenario(stepper)"
                 [disabled]="isSubmitting || energyScenarioForm.invalid"
               >
-                <span *ngIf="!isSubmitting">Next</span>
+                <span *ngIf="!isSubmitting">Siguiente</span>
                 <span *ngIf="isSubmitting">Submitting...</span>
                 <mat-icon>arrow_forward</mat-icon>
               </button>
@@ -1221,28 +1207,15 @@
             <ng-template matStepLabel>Answer Your Question</ng-template>
 
             <div class="form-step-content" [formGroup]="answerQuestionForm">
-              <h2 class="step-title">And Now, Your Question!</h2>
+              <h2 class="step-title">Y ahora, ¡tu pregunta!</h2>
 
               <div class="form-section">
-                <p class="section-description">
-                  Do you remember the question you proposed a moment ago?
-                </p>
-                <p class="section-description">
-                  Well... it's time for you to answer it too!
-                  <span class="required-asterisk">*</span>
-                </p>
-
-                <div class="question-display">
-                  <h3 class="question-label">Your Question:</h3>
-                  <p class="question-text">
-                    {{ additionalInfoForm.get("questionForCandidates")?.value }}
-                  </p>
-                </div>
-
                 <div class="form-row" style="margin-top: 2rem">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Your Answer
+                      ¿Recuerdas la pregunta que propusiste hace un momento?
+                      <br />
+                      Bueno... es hora de que tú también la respondas!
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -1282,7 +1255,7 @@
             <div class="form-actions">
               <button mat-button type="button" (click)="stepper.previous()">
                 <mat-icon>arrow_back</mat-icon>
-                Back
+                Atrás
               </button>
               <button
                 mat-raised-button
@@ -1291,7 +1264,7 @@
                 (click)="onSubmitAnswerQuestion(stepper)"
                 [disabled]="isSubmitting || answerQuestionForm.invalid"
               >
-                <span *ngIf="!isSubmitting">Next</span>
+                <span *ngIf="!isSubmitting">Siguiente</span>
                 <span *ngIf="isSubmitting">Submitting...</span>
                 <mat-icon>arrow_forward</mat-icon>
               </button>
