@@ -193,7 +193,7 @@ export class WelcomeFormComponent implements OnInit {
           otherLanguageLevelControl?.clearValidators();
           otherLanguageLevelControl?.setValue('');
         } else if (value && value.toLowerCase() !== 'no') {
-          otherLanguageLevelControl?.setValidators([]);
+          otherLanguageLevelControl?.setValidators([Validators.required]);
         }
         otherLanguageLevelControl?.updateValueAndValidity();
       });
@@ -203,67 +203,110 @@ export class WelcomeFormComponent implements OnInit {
     return this.fb.group({
       fullName: [
         '',
-        [Validators.minLength(2), CustomValidators.fullNameValidator()],
+        [
+          Validators.required,
+          Validators.minLength(2),
+          CustomValidators.fullNameValidator(),
+        ],
       ],
-      identityDocument: ['', [CustomValidators.identityDocumentValidator()]],
-      birthDate: [''],
-      birthPlace: ['', [Validators.minLength(2)]],
-      email: ['', [Validators.email]],
-      city: ['', [Validators.minLength(2)]],
-      country: [''],
-      phoneNumber: ['', [CustomValidators.phoneNumberValidator()]],
-      phoneCountryCode: ['+57'], // Default to Colombia
+      identityDocument: [
+        '',
+        [Validators.required, CustomValidators.identityDocumentValidator()],
+      ],
+      birthDate: ['', [Validators.required]],
+      birthPlace: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      city: ['', [Validators.required, Validators.minLength(2)]],
+      country: ['', [Validators.required]],
+      phoneNumber: [
+        '',
+        [Validators.required, CustomValidators.phoneNumberValidator()],
+      ],
+      phoneCountryCode: ['+57', [Validators.required]], // Default to Colombia
     });
   }
 
   private createProfessionalInfoForm(): FormGroup {
     return this.fb.group({
       // Professional History
-      school: ['', [Validators.minLength(2)]],
-      degree: ['', [Validators.minLength(2)]],
+      school: ['', [Validators.required, Validators.minLength(2)]],
+      degree: ['', [Validators.required, Validators.minLength(2)]],
 
       // Work Experience
-      company: ['', [Validators.minLength(2)]],
-      position: ['', [Validators.minLength(2)]],
-      startDate: [''],
-      endDate: [''],
-      immediateLeader: ['', [Validators.minLength(2)]],
-      mainResponsibilities: ['', [Validators.minLength(10)]],
-      achievements: ['', [Validators.minLength(10)]],
-      whyCloseCycle: ['', [Validators.minLength(10)]],
+      company: ['', [Validators.required, Validators.minLength(2)]],
+      position: ['', [Validators.required, Validators.minLength(2)]],
+      startDate: ['', [Validators.required]],
+      endDate: ['', [Validators.required]],
+      immediateLeader: ['', [Validators.required, Validators.minLength(2)]],
+      mainResponsibilities: [
+        '',
+        [Validators.required, Validators.minLength(10)],
+      ],
+      achievements: ['', [Validators.required, Validators.minLength(10)]],
+      whyCloseCycle: ['', [Validators.required, Validators.minLength(10)]],
 
       // Languages
-      englishLevel: [''],
-      englishLearningPlace: ['', [Validators.minLength(2)]],
-      otherLanguage: [''],
+      englishLevel: ['', [Validators.required]],
+      englishLearningPlace: [
+        '',
+        [Validators.required, Validators.minLength(2)],
+      ],
+      otherLanguage: ['', [Validators.required]],
       otherLanguageLevel: [''],
     });
   }
 
   private createAdditionalInfoForm(): FormGroup {
     return this.fb.group({
-      preferredName: ['', [Validators.minLength(2)]],
-      superpowerAndKryptonite: ['', [Validators.minLength(10)]],
-      whatCaughtAttention: ['', [Validators.minLength(10)]],
-      uniqueWorkStyle: ['', [Validators.minLength(10)]],
-      questionForCandidates: ['', [Validators.minLength(10)]],
+      preferredName: ['', [Validators.required, Validators.minLength(2)]],
+      superpowerAndKryptonite: [
+        '',
+        [Validators.required, Validators.minLength(10)],
+      ],
+      whatCaughtAttention: [
+        '',
+        [Validators.required, Validators.minLength(10)],
+      ],
+      uniqueWorkStyle: ['', [Validators.required, Validators.minLength(10)]],
+      questionForCandidates: [
+        '',
+        [Validators.required, Validators.minLength(10)],
+      ],
     });
   }
 
   private createEnergyScenarioForm(): FormGroup {
     return this.fb.group({
-      energyAspect1: ['', [Validators.min(0), Validators.max(100)]],
-      energyAspect2: ['', [Validators.min(0), Validators.max(100)]],
-      energyAspect3: ['', [Validators.min(0), Validators.max(100)]],
-      energyAspect4: ['', [Validators.min(0), Validators.max(100)]],
-      scenarioAction: [''],
-      scenarioExplanation: ['', [Validators.minLength(10)]],
+      energyAspect1: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      energyAspect2: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      energyAspect3: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      energyAspect4: [
+        '',
+        [Validators.required, Validators.min(0), Validators.max(100)],
+      ],
+      scenarioAction: ['', [Validators.required]],
+      scenarioExplanation: [
+        '',
+        [Validators.required, Validators.minLength(10)],
+      ],
     });
   }
 
   private createAnswerQuestionForm(): FormGroup {
     return this.fb.group({
-      answerToOwnQuestion: ['', [Validators.minLength(10)]],
+      answerToOwnQuestion: [
+        '',
+        [Validators.required, Validators.minLength(10)],
+      ],
     });
   }
 
