@@ -29,11 +29,11 @@ jobs:
       - name: install deps
         run: npm i
       # Buid
-      - name: Buil
+      - name: Build
         run: npm run build:prod
-      - name: Deply to Pages
+      - name: Deploy to Pages
         uses: crazy-max/ghaction-github-pages@v4.2.0
         with:
-          build_dir: dist/celerix-questions/
+          build_dir: dist/project-celerix
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
