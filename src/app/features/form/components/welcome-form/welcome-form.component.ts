@@ -321,36 +321,36 @@ export class WelcomeFormComponent implements OnInit {
     }
 
     if (control.errors['required']) {
-      return `${this.getFieldLabel(fieldName)} is required`;
+      return `${this.getFieldLabel(fieldName)} es requerido`;
     }
 
     if (control.errors['email']) {
-      return 'Please enter a valid email address';
+      return 'Por favor ingresa un correo electrónico válido';
     }
 
     if (control.errors['minlength']) {
-      return `${this.getFieldLabel(fieldName)} must be at least ${
+      return `${this.getFieldLabel(fieldName)} debe tener al menos ${
         control.errors['minlength'].requiredLength
-      } characters`;
+      } caracteres`;
     }
 
     if (control.errors['invalidPhoneNumber']) {
-      return 'Please enter a valid phone number';
+      return 'Por favor ingresa un número de teléfono válido';
     }
 
     if (control.errors['invalidIdentityDocument']) {
-      return 'Please enter a valid identity document';
+      return 'Por favor ingresa un documento de identidad válido';
     }
 
     if (control.errors['invalidFullName']) {
-      return 'Please enter a valid full name';
+      return 'Por favor ingresa un nombre completo válido';
     }
 
     if (control.errors['min'] || control.errors['max']) {
-      return 'Percentage must be between 0 and 100';
+      return 'El porcentaje debe estar entre 0 y 100';
     }
 
-    return 'Invalid value';
+    return 'Valor inválido';
   }
 
   getEnergyPercentageSum(): number {
@@ -371,40 +371,40 @@ export class WelcomeFormComponent implements OnInit {
 
   private getFieldLabel(fieldName: string): string {
     const labels: { [key: string]: string } = {
-      fullName: 'Full name',
-      identityDocument: 'Identity document',
-      birthDate: 'Birth date',
-      birthPlace: 'Birth place',
-      email: 'Email',
-      city: 'City',
-      country: 'Country',
-      phoneNumber: 'Phone number',
-      school: 'School',
-      degree: 'Degree',
-      company: 'Company',
-      position: 'Position',
-      startDate: 'Start date',
-      endDate: 'End date',
-      immediateLeader: 'Immediate leader',
-      mainResponsibilities: 'Main responsibilities',
-      achievements: 'Achievements',
-      whyCloseCycle: 'Why did you decide to close that cycle?',
-      englishLevel: 'English level',
-      englishLearningPlace: 'Where did you learn it?',
-      otherLanguage: 'Other language',
-      otherLanguageLevel: 'Other language level',
-      preferredName: 'Preferred name',
-      superpowerAndKryptonite: 'Superpower and kryptonite',
-      whatCaughtAttention: 'What caught your attention',
-      uniqueWorkStyle: 'Unique work style',
-      questionForCandidates: 'Question for candidates',
-      energyAspect1: 'Energy Aspect 1',
-      energyAspect2: 'Energy Aspect 2',
-      energyAspect3: 'Energy Aspect 3',
-      energyAspect4: 'Energy Aspect 4',
-      scenarioAction: 'Scenario action',
-      scenarioExplanation: 'Scenario explanation',
-      answerToOwnQuestion: 'Answer to own question',
+      fullName: 'Nombre completo',
+      identityDocument: 'Documento de identidad',
+      birthDate: 'Fecha de nacimiento',
+      birthPlace: 'Lugar de nacimiento',
+      email: 'Correo electrónico',
+      city: 'Ciudad',
+      country: 'País',
+      phoneNumber: 'Número de teléfono',
+      school: 'Colegio',
+      degree: 'Pregrado / Postgrado / Maestría',
+      company: 'Empresa',
+      position: 'Cargo',
+      startDate: 'Fecha de inicio',
+      endDate: 'Fecha de finalización',
+      immediateLeader: 'Líder inmediato',
+      mainResponsibilities: 'Principales responsabilidades',
+      achievements: 'Logros que te enorgullecen',
+      whyCloseCycle: '¿Por qué decidiste cerrar ese ciclo?',
+      englishLevel: 'Nivel de inglés',
+      englishLearningPlace: '¿Dónde aprendiste?',
+      otherLanguage: '¿Otro idioma?',
+      otherLanguageLevel: 'Nivel de otro idioma',
+      preferredName: '¿Cómo te gustaría que te llamen?',
+      superpowerAndKryptonite: 'Superpoder y kryptonita',
+      whatCaughtAttention: '¿Qué te atrajo más sobre esta oportunidad?',
+      uniqueWorkStyle: 'Estilo de trabajo único',
+      questionForCandidates: 'Pregunta para candidatos',
+      energyAspect1: 'Aspecto de energía 1',
+      energyAspect2: 'Aspecto de energía 2',
+      energyAspect3: 'Aspecto de energía 3',
+      energyAspect4: 'Aspecto de energía 4',
+      scenarioAction: 'Acción del escenario',
+      scenarioExplanation: 'Explicación del escenario',
+      answerToOwnQuestion: 'Respuesta a tu propia pregunta',
     };
     return labels[fieldName] || fieldName;
   }
