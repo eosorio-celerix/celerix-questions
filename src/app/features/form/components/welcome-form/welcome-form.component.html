@@ -1,6 +1,8 @@
 <div class="form-container">
   <mat-card class="form-card">
     <mat-card-content>
+      <h1 class="welcome-main-title">¡Bienvenid@!</h1>
+
       <form [formGroup]="personalInfoForm" (ngSubmit)="onSubmit(stepper)">
         <mat-stepper #stepper linear="true" class="form-stepper">
           <!-- Step 1: Personal Information -->

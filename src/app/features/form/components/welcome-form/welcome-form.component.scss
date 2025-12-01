@@ -1,7 +1,7 @@
 // Using Tailwind classes in component
 .form-container {
   @apply flex justify-center items-start min-h-screen;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   // margin-top: -70px; /* sube la card para que se solape con el círculo del header */
 }
 
@@ -12,6 +12,11 @@
 mat-card-content {
   /* pt más grande para que el contenido inicie debajo del círculo del header */
   @apply pt-24 px-8 pb-8;
+}
+
+.welcome-main-title {
+  @apply text-5xl font-extrabold text-center mb-8;
+  color: #222222;
 }
 
 .form-stepper {
