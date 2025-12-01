@@ -1,14 +1,12 @@
-
-
 name: deploy
 
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -35,9 +33,7 @@ jobs:
         run: npm run build:prod
       - name: Deply to Pages
         uses: crazy-max/ghaction-github-pages@v4.2.0
-        with: 
-          buid_dir: dist/
+        with:
+          build_dir: dist/project-celerix
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        
-      
