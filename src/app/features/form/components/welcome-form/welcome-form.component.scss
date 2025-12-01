@@ -1,7 +1,8 @@
 // Using Tailwind classes in component
 .form-container {
-  @apply flex justify-center items-start min-h-screen py-8 px-4;
+  @apply flex justify-center items-start min-h-screen;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  // margin-top: -70px; /* sube la card para que se solape con el círculo del header */
 }
 
 .form-card {
@@ -9,11 +10,23 @@
 }
 
 mat-card-content {
-  @apply p-8;
+  /* pt más grande para que el contenido inicie debajo del círculo del header */
+  @apply pt-24 px-8 pb-8;
 }
 
 .form-stepper {
   @apply bg-transparent;
+}
+
+// Hide the stepper header but keep functionality
+::ng-deep .form-stepper {
+  .mat-step-header {
+    display: none !important;
+  }
+
+  .mat-stepper-horizontal-line {
+    display: none !important;
+  }
 }
 
 .form-step-content {
@@ -21,7 +34,8 @@ mat-card-content {
 }
 
 .step-title {
-  @apply text-2xl font-medium mb-2 text-gray-800;
+  @apply text-2xl font-medium mb-2;
+  color: #000000;
 }
 
 .step-subtitle {
@@ -213,7 +227,7 @@ mat-card-content {
 }
 
 .form-section {
-  @apply mb-10 pb-8 border-b border-gray-300;
+  @apply mb-10  border-b border-gray-300;
 
   &:last-of-type {
     @apply border-b-0 mb-0 pb-0;
@@ -221,7 +235,8 @@ mat-card-content {
 }
 
 .section-title {
-  @apply text-xl font-medium mb-6 text-indigo-500 pb-2 border-b-2 border-indigo-500;
+  @apply text-xl font-medium mb-6 pb-2 border-b-2 border-indigo-500;
+  color: #000000;
 }
 
 .section-description {
@@ -332,10 +347,14 @@ mat-card-content {
 }
 
 .form-actions {
-  @apply flex justify-between gap-4 mt-8 pt-6 border-t border-gray-300;
+  @apply flex justify-end gap-4 mt-8 pt-6 border-t border-gray-300;
 
   button {
     @apply flex items-center gap-2;
+  }
+
+  .next-button {
+    margin-left: auto;
   }
 }
 

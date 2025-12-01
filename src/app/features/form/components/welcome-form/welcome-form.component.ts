@@ -75,11 +75,11 @@ export class WelcomeFormComponent implements OnInit {
   energyAspects = ['Aspect 1', 'Aspect 2', 'Aspect 3', 'Aspect 4'];
 
   scenarioOptions = [
-    { value: 'public', label: 'Do you correct it in public?' },
-    { value: 'private', label: 'Do you wait to discuss it in private?' },
+    { value: 'public', label: 'A. ¿Corriges en público?' },
+    { value: 'private', label: 'B. ¿Esperas a discutirlo en privado?' },
     {
       value: 'other',
-      label: 'Do you look for another way to address the issue?',
+      label: 'C. ¿Buscas otra manera de abordar el problema?',
     },
   ];
 
@@ -251,33 +251,15 @@ export class WelcomeFormComponent implements OnInit {
   }
 
   private createEnergyScenarioForm(): FormGroup {
-    return this.fb.group(
-      {
-        energyAspect1: ['', [Validators.min(0), Validators.max(100)]],
-        energyAspect2: ['', [Validators.min(0), Validators.max(100)]],
-        energyAspect3: ['', [Validators.min(0), Validators.max(100)]],
-        energyAspect4: ['', [Validators.min(0), Validators.max(100)]],
-        scenarioAction: [''],
-        scenarioExplanation: ['', [Validators.minLength(10)]],
-      },
-      { validators: this.percentageSumValidator }
-    );
+    return this.fb.group({
+      energyAspect1: ['', [Validators.min(0), Validators.max(100)]],
+      energyAspect2: ['', [Validators.min(0), Validators.max(100)]],
+      energyAspect3: ['', [Validators.min(0), Validators.max(100)]],
+      energyAspect4: ['', [Validators.min(0), Validators.max(100)]],
+      scenarioAction: [''],
+      scenarioExplanation: ['', [Validators.minLength(10)]],
+    });
   }
-
-  private percentageSumValidator = (
-    form: FormGroup
-  ): ValidationErrors | null => {
-    const aspect1 = parseFloat(form.get('energyAspect1')?.value || '0');
-    const aspect2 = parseFloat(form.get('energyAspect2')?.value || '0');
-    const aspect3 = parseFloat(form.get('energyAspect3')?.value || '0');
-    const aspect4 = parseFloat(form.get('energyAspect4')?.value || '0');
-    const sum = aspect1 + aspect2 + aspect3 + aspect4;
-
-    if (sum !== 100) {
-      return { invalidPercentageSum: { actualSum: sum, requiredSum: 100 } };
-    }
-    return null;
-  };
 
   private createAnswerQuestionForm(): FormGroup {
     return this.fb.group({
@@ -319,11 +301,6 @@ export class WelcomeFormComponent implements OnInit {
 
     if (control.errors['invalidFullName']) {
       return 'Please enter a valid full name';
-    }
-
-    if (control.errors['invalidPercentageSum']) {
-      const actualSum = control.errors['invalidPercentageSum'].actualSum;
-      return `The sum of percentages must be 100%. Current sum: ${actualSum}%`;
     }
 
     if (control.errors['min'] || control.errors['max']) {
@@ -499,5 +476,9 @@ export class WelcomeFormComponent implements OnInit {
     this.selectedPhoneCountry = country;
     this.personalInfoForm.patchValue({ phoneCountryCode: country.code });
     this.showCountryDropdown = false;
+  }
+
+  onDatepickerClosed(input: HTMLInputElement): void {
+    input.blur();
   }
 }
