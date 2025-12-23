@@ -3,6 +3,72 @@
     <mat-card-content>
       <h1 class="welcome-main-title">¡Bienvenid@!</h1>
 
+      <!-- Sección de búsqueda por documento -->
+      <div class="search-section" *ngIf="!formFound">
+        <h2 class="search-title">Buscar información existente</h2>
+        <form [formGroup]="searchDocumentForm" (ngSubmit)="onSearchForm()">
+          <div class="form-row">
+            <div class="form-field full-width">
+              <label class="form-label">
+                Documento de identidad:
+                <span class="form-label-required">*</span>
+              </label>
+              <div class="search-input-wrapper">
+                <input
+                  type="text"
+                  formControlName="searchIdentityDocument"
+                  class="form-input"
+                  placeholder="Ingresa tu documento de identidad"
+                  [class.invalid]="
+                    isFieldInvalid(
+                      'searchIdentityDocument',
+                      searchDocumentForm
+                    )
+                  "
+                />
+                <button
+                  mat-raised-button
+                  color="primary"
+                  type="submit"
+                  [disabled]="isSearching || searchDocumentForm.invalid"
+                  class="search-button"
+                >
+                  <mat-icon *ngIf="!isSearching">search</mat-icon>
+                  <span *ngIf="isSearching">Buscando...</span>
+                  <span *ngIf="!isSearching">Buscar</span>
+                </button>
+              </div>
+              <span
+                *ngIf="
+                  isFieldInvalid(
+                    'searchIdentityDocument',
+                    searchDocumentForm
+                  )
+                "
+                class="form-error"
+              >
+                {{
+                  getErrorMessage(
+                    'searchIdentityDocument',
+                    searchDocumentForm
+                  )
+                }}
+              </span>
+              <span *ngIf="searchError" class="form-error">
+                {{ searchError }}
+              </span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Mensaje cuando se encuentra el formulario -->
+      <div class="form-found-message" *ngIf="formFound">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <p>Información encontrada. Puedes revisar y actualizar los datos.</p>
+      </div>
+
+      <!-- Formulario principal (stepper) -->
       <form [formGroup]="personalInfoForm" (ngSubmit)="onSubmit(stepper)">
         <mat-stepper #stepper linear="true" class="form-stepper">
           <!-- Step 1: Personal Information -->

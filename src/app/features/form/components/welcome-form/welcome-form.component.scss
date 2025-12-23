@@ -444,6 +444,52 @@ mat-card-content {
   @apply font-medium;
 }
 
+// Search section styles
+.search-section {
+  @apply mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200;
+}
+
+.search-title {
+  @apply text-xl font-medium mb-4;
+  color: #424242;
+}
+
+.search-input-wrapper {
+  @apply flex gap-3 items-start;
+
+  .form-input {
+    @apply flex-1;
+  }
+
+  .search-button {
+    @apply whitespace-nowrap;
+    margin-top: 0;
+    min-width: 120px;
+  }
+}
+
+.form-found-message {
+  @apply flex items-center gap-4 p-4 mb-6 rounded-lg;
+  background-color: #e8f5e9;
+  border-left: 4px solid #4caf50;
+
+  .success-icon {
+    @apply text-2xl;
+    color: #4caf50;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  p {
+    @apply flex-1 m-0;
+    color: #2e7d32;
+  }
+
+  .new-form-button {
+    @apply ml-auto;
+  }
+}
+
 @media (max-width: 768px) {
   .form-container {
     @apply py-4 px-2;
@@ -484,5 +530,21 @@ mat-card-content {
 
   .form-section {
     @apply mb-8 pb-6;
+  }
+
+  .search-input-wrapper {
+    @apply flex-col;
+
+    .search-button {
+      @apply w-full;
+    }
+  }
+
+  .form-found-message {
+    @apply flex-col text-center;
+
+    .new-form-button {
+      @apply ml-0 w-full;
+    }
   }
 }

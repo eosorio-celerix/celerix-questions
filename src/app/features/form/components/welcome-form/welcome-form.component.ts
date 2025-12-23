@@ -71,6 +71,10 @@ export class WelcomeFormComponent implements OnInit {
   energyScenarioForm: FormGroup;
   answerQuestionForm: FormGroup;
   isSubmitting = false;
+  searchDocumentForm: FormGroup;
+  isSearching = false;
+  searchError: string | null = null;
+  formFound = false;
 
   energyAspects = ['Aspect 1', 'Aspect 2', 'Aspect 3', 'Aspect 4'];
 
@@ -112,6 +116,14 @@ export class WelcomeFormComponent implements OnInit {
     private datePipe: DatePipe,
     private countryService: CountryService
   ) {
+    // Crear formulario de búsqueda
+    this.searchDocumentForm = this.fb.group({
+      searchIdentityDocument: [
+        '',
+        [Validators.required, CustomValidators.identityDocumentValidator()],
+      ],
+    });
+
     this.personalInfoForm = this.createPersonalInfoForm();
     this.professionalInfoForm = this.createProfessionalInfoForm();
     this.additionalInfoForm = this.createAdditionalInfoForm();
@@ -523,5 +535,124 @@ export class WelcomeFormComponent implements OnInit {
 
   onDatepickerClosed(input: HTMLInputElement): void {
     input.blur();
+  }
+
+  onSearchForm(): void {
+    if (this.searchDocumentForm.invalid) {
+      this.markAllFieldsAsTouched(this.searchDocumentForm);
+      return;
+    }
+
+    const identityDocument =
+      this.searchDocumentForm.get('searchIdentityDocument')?.value;
+
+    if (!identityDocument) {
+      return;
+    }
+
+    this.isSearching = true;
+    this.searchError = null;
+    this.formFound = false;
+
+    this.formService.searchFormByIdentityDocument(identityDocument).subscribe({
+      next: (formData) => {
+        this.isSearching = false;
+
+        if (formData) {
+          this.formFound = true;
+          this.loadFormData(formData);
+        } else {
+          this.searchError = 'No se encontró información con ese documento.';
+          this.formFound = false;
+        }
+      },
+      error: (error) => {
+        this.isSearching = false;
+        this.searchError =
+          'Error al buscar el formulario. Por favor intenta nuevamente.';
+        console.error('Error buscando formulario:', error);
+      },
+    });
+  }
+
+  private loadFormData(formData: UserFormData): void {
+    // Cargar datos personales
+    this.personalInfoForm.patchValue({
+      fullName: formData.fullName || '',
+      identityDocument: formData.identityDocument || '',
+      birthDate: formData.birthDate || '',
+      birthPlace: formData.birthPlace || '',
+      email: formData.email || '',
+      city: formData.city || '',
+      country: formData.country || '',
+      phoneNumber: formData.phoneNumber || '',
+      phoneCountryCode: formData.phoneCountryCode || '+57',
+    });
+
+    // Cargar datos profesionales
+    this.professionalInfoForm.patchValue({
+      school: formData.school || '',
+      degree: formData.degree || '',
+      company: formData.company || '',
+      position: formData.position || '',
+      startDate: formData.startDate || '',
+      endDate: formData.endDate || '',
+      immediateLeader: formData.immediateLeader || '',
+      mainResponsibilities: formData.mainResponsibilities || '',
+      achievements: formData.achievements || '',
+      whyCloseCycle: formData.whyCloseCycle || '',
+      englishLevel: formData.englishLevel || '',
+      englishLearningPlace: formData.englishLearningPlace || '',
+      otherLanguage: formData.otherLanguage || '',
+      otherLanguageLevel: formData.otherLanguageLevel || '',
+    });
+
+    // Cargar información adicional
+    this.additionalInfoForm.patchValue({
+      preferredName: formData.preferredName || '',
+      superpowerAndKryptonite: formData.superpowerAndKryptonite || '',
+      whatCaughtAttention: formData.whatCaughtAttention || '',
+      uniqueWorkStyle: formData.uniqueWorkStyle || '',
+      questionForCandidates: formData.questionForCandidates || '',
+    });
+
+    // Cargar datos de energía y escenario
+    this.energyScenarioForm.patchValue({
+      energyAspect1: formData.energyAspect1 || '',
+      energyAspect2: formData.energyAspect2 || '',
+      energyAspect3: formData.energyAspect3 || '',
+      energyAspect4: formData.energyAspect4 || '',
+      scenarioAction: formData.scenarioAction || '',
+      scenarioExplanation: formData.scenarioExplanation || '',
+    });
+
+    // Cargar respuesta a pregunta propia
+    this.answerQuestionForm.patchValue({
+      answerToOwnQuestion: formData.answerToOwnQuestion || '',
+    });
+
+    // Actualizar país seleccionado para teléfono si existe
+    if (formData.phoneCountryCode) {
+      this.countryService.getCountriesForPhone().subscribe((countries) => {
+        const country = countries.find(
+          (c) => c.code === formData.phoneCountryCode
+        );
+        if (country) {
+          this.selectedPhoneCountry = country;
+        }
+      });
+    }
+  }
+
+  onNewForm(): void {
+    this.searchDocumentForm.reset();
+    this.formFound = false;
+    this.searchError = null;
+    this.personalInfoForm.reset();
+    this.professionalInfoForm.reset();
+    this.additionalInfoForm.reset();
+    this.energyScenarioForm.reset();
+    this.answerQuestionForm.reset();
+    this.formService.clearFormData();
   }
 }
