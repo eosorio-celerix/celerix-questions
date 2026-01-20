@@ -175,41 +175,201 @@ export class DynamoDBService {
       return String(field);
     };
 
-    // Mapear directamente los campos del formulario
+    // Parsear informacionBasica (puede venir como string estructurado)
+    const infoBasica = getValue(item.informacionBasica);
+    let parsedInfo: any = {};
+    
+    if (infoBasica) {
+      // Intentar parsear si viene como string estructurado
+      try {
+        const lines = infoBasica.split('\n');
+        lines.forEach((line: string) => {
+          if (line.includes('Nombre Completo:') || line.includes('Nombre:')) {
+            parsedInfo.fullName = line.split(':')[1]?.trim() || '';
+          }
+          if (line.includes('Documento Identidad:') || line.includes('Documento:')) {
+            parsedInfo.identityDocument = line.split(':')[1]?.trim() || '';
+          }
+          if (line.includes('Fecha Nacimiento:') || line.includes('Fecha:')) {
+            parsedInfo.birthDate = line.split(':')[1]?.trim() || '';
+          }
+          if (line.includes('Lugar de Nacimiento:') || line.includes('Lugar Nacimiento:')) {
+            parsedInfo.birthPlace = line.split(':')[1]?.trim() || '';
+          }
+          if (line.includes('Correo Electronico:') || line.includes('Correo:') || line.includes('Email:')) {
+            parsedInfo.email = line.split(':')[1]?.trim() || '';
+          }
+          if (line.includes('Ciudad:') || line.includes('City:')) {
+            parsedInfo.city = line.split(':')[1]?.trim() || '';
+          }
+          if (line.includes('País:') || line.includes('Country:')) {
+            parsedInfo.country = line.split(':')[1]?.trim() || '';
+          }
+          if (line.includes('Numero Celular:') || line.includes('Teléfono:') || line.includes('Phone:')) {
+            const phone = line.split(':')[1]?.trim() || '';
+            const phoneMatch = phone.match(/^(\+\d{1,3})\s*(.+)$/);
+            if (phoneMatch) {
+              parsedInfo.phoneCountryCode = phoneMatch[1];
+              parsedInfo.phoneNumber = phoneMatch[2].replace(/\s/g, '');
+            } else {
+              parsedInfo.phoneNumber = phone.replace(/\s/g, '');
+            }
+          }
+        });
+      } catch (e) {
+        // Si no se puede parsear, usar el valor directo
+        console.warn('No se pudo parsear informacionBasica:', e);
+      }
+    }
+
+    // Parsear Educacion
+    const educacion = getValue(item.Educacion);
+    let parsedEducacion: any = {};
+    if (educacion) {
+      try {
+        const educaciones = educacion.split('\n\n');
+        const primeraEducacion = educaciones.find((edu: string) => 
+          edu.includes('Estado: Completado') || edu.includes('Estado: Completada')
+        ) || educaciones[0];
+        
+        if (primeraEducacion) {
+          const lines = primeraEducacion.split('\n');
+          lines.forEach((line: string) => {
+            if (line.includes('Institución:') || line.includes('Institucion:')) {
+              parsedEducacion.school = line.split(':')[1]?.trim() || '';
+            }
+            if (line.includes('Título:') || line.includes('Titulo:')) {
+              parsedEducacion.degree = line.split(':')[1]?.trim() || '';
+            }
+          });
+        }
+      } catch (e) {
+        console.warn('No se pudo parsear Educacion:', e);
+      }
+    }
+
+    // Parsear Empleo
+    const empleo = getValue(item.Empleo);
+    let parsedEmpleo: any = {};
+    if (empleo) {
+      try {
+        const experiencias = empleo.split('\n\n');
+        if (experiencias.length > 0) {
+          const primeraExp = experiencias[0];
+          const lines = primeraExp.split('\n');
+          lines.forEach((line: string) => {
+            if (line.includes('Empresa:')) {
+              parsedEmpleo.company = line.split(':')[1]?.trim() || '';
+            }
+            if (line.includes('Cargo:')) {
+              parsedEmpleo.position = line.split(':')[1]?.trim() || '';
+            }
+            if (line.includes('Período:') || line.includes('Periodo:')) {
+              const periodo = line.split(':')[1]?.trim() || '';
+              const dates = periodo.split(' - ');
+              parsedEmpleo.startDate = dates[0]?.trim() || '';
+              parsedEmpleo.endDate = dates[1]?.trim() || '';
+            }
+            if (line.includes('Descripción:') || line.includes('Descripcion:')) {
+              parsedEmpleo.mainResponsibilities = line.split(':')[1]?.trim() || '';
+            }
+          });
+        }
+      } catch (e) {
+        console.warn('No se pudo parsear Empleo:', e);
+      }
+    }
+
+    // Parsear Idiomas
+    const idiomas = getValue(item.Idiomas);
+    let parsedIdiomas: any = {};
+    if (idiomas) {
+      try {
+        const idiomasList = idiomas.split('\n\n');
+        const ingles = idiomasList.find((idioma: string) => idioma.includes('Inglés') || idioma.includes('Ingles'));
+        if (ingles) {
+          const lines = ingles.split('\n');
+          lines.forEach((line: string) => {
+            if (line.includes('Nivel:')) {
+              const nivel = line.split(':')[1]?.trim() || '';
+              if (nivel === '0' || nivel === '1') {
+                parsedIdiomas.englishLevel = 'Básico';
+              } else if (nivel === '2') {
+                parsedIdiomas.englishLevel = 'Intermedio';
+              } else if (nivel === '3' || nivel === '4' || nivel === '5') {
+                parsedIdiomas.englishLevel = 'Avanzado';
+              }
+            }
+            if (line.includes('Dónde aprendió:') || line.includes('Donde aprendio:')) {
+              parsedIdiomas.englishLearningPlace = line.split(':')[1]?.trim() || '';
+            }
+          });
+        }
+        
+        const otrosIdiomas = idiomasList.filter((idioma: string) => 
+          !idioma.includes('Español') && !idioma.includes('Espanol') && !idioma.includes('Inglés') && !idioma.includes('Ingles')
+        );
+        if (otrosIdiomas.length > 0) {
+          const otroIdioma = otrosIdiomas[0];
+          const lines = otroIdioma.split('\n');
+          lines.forEach((line: string) => {
+            if (line.includes('Idioma:')) {
+              parsedIdiomas.otherLanguage = line.split(':')[1]?.trim() || '';
+            }
+            if (line.includes('Nivel:')) {
+              const nivel = line.split(':')[1]?.trim() || '';
+              if (nivel === '0' || nivel === '1') {
+                parsedIdiomas.otherLanguageLevel = 'Básico';
+              } else if (nivel === '2') {
+                parsedIdiomas.otherLanguageLevel = 'Intermedio';
+              } else if (nivel === '3' || nivel === '4' || nivel === '5') {
+                parsedIdiomas.otherLanguageLevel = 'Avanzado';
+              }
+            }
+          });
+        } else {
+          parsedIdiomas.otherLanguage = 'No';
+        }
+      } catch (e) {
+        console.warn('No se pudo parsear Idiomas:', e);
+      }
+    }
+
+    // Mapear los campos del formulario combinando datos directos y parseados
     const formData: UserFormData = {
-      // Personal Information
-      fullName: getValue(item.fullName) || '',
-      identityDocument: getValue(item.identityDocument) || getValue(item.Cedula) || '',
-      birthDate: getValue(item.birthDate) || '',
-      birthPlace: getValue(item.birthPlace) || '',
-      email: getValue(item.email) || '',
-      city: getValue(item.city) || '',
-      country: getValue(item.country) || '',
-      phoneNumber: getValue(item.phoneNumber) || '',
-      phoneCountryCode: getValue(item.phoneCountryCode) || '+57',
+      // Personal Information (de informacionBasica parseado o campos directos)
+      fullName: parsedInfo.fullName || getValue(item.fullName) || '',
+      identityDocument: getValue(item.Cedula) || parsedInfo.identityDocument || getValue(item.identityDocument) || '',
+      birthDate: parsedInfo.birthDate || getValue(item.birthDate) || '',
+      birthPlace: parsedInfo.birthPlace || getValue(item.birthPlace) || '',
+      email: parsedInfo.email || getValue(item.email) || '',
+      city: parsedInfo.city || getValue(item.city) || '',
+      country: parsedInfo.country || getValue(item.country) || '',
+      phoneNumber: parsedInfo.phoneNumber || getValue(item.phoneNumber) || '',
+      phoneCountryCode: parsedInfo.phoneCountryCode || getValue(item.phoneCountryCode) || '+57',
 
-      // Professional History
-      school: getValue(item.school) || '',
-      degree: getValue(item.degree) || '',
+      // Professional History (de Educacion parseado)
+      school: parsedEducacion.school || getValue(item.school) || '',
+      degree: parsedEducacion.degree || getValue(item.degree) || '',
 
-      // Work Experience
-      company: getValue(item.company) || '',
-      position: getValue(item.position) || '',
-      startDate: getValue(item.startDate) || '',
-      endDate: getValue(item.endDate) || '',
+      // Work Experience (de Empleo parseado)
+      company: parsedEmpleo.company || getValue(item.company) || '',
+      position: parsedEmpleo.position || getValue(item.position) || '',
+      startDate: parsedEmpleo.startDate || getValue(item.startDate) || '',
+      endDate: parsedEmpleo.endDate || getValue(item.endDate) || '',
       immediateLeader: getValue(item.immediateLeader) || '',
-      mainResponsibilities: getValue(item.mainResponsibilities) || '',
+      mainResponsibilities: parsedEmpleo.mainResponsibilities || getValue(item.mainResponsibilities) || '',
       achievements: getValue(item.achievements) || '',
       whyCloseCycle: getValue(item.whyCloseCycle) || '',
 
-      // Languages
-      englishLevel: (getValue(item.englishLevel) as 'Básico' | 'Intermedio' | 'Avanzado') || undefined,
-      englishLearningPlace: getValue(item.englishLearningPlace) || '',
-      otherLanguage: getValue(item.otherLanguage) || '',
-      otherLanguageLevel: (getValue(item.otherLanguageLevel) as 'Básico' | 'Intermedio' | 'Avanzado') || undefined,
+      // Languages (de Idiomas parseado)
+      englishLevel: parsedIdiomas.englishLevel || (getValue(item.englishLevel) as 'Básico' | 'Intermedio' | 'Avanzado') || undefined,
+      englishLearningPlace: parsedIdiomas.englishLearningPlace || getValue(item.englishLearningPlace) || '',
+      otherLanguage: parsedIdiomas.otherLanguage || getValue(item.otherLanguage) || '',
+      otherLanguageLevel: parsedIdiomas.otherLanguageLevel || (getValue(item.otherLanguageLevel) as 'Básico' | 'Intermedio' | 'Avanzado') || undefined,
 
       // Additional Personal Information
-      preferredName: getValue(item.preferredName) || '',
+      preferredName: getValue(item.nombreFavorito) || getValue(item.preferredName) || '',
       superpowerAndKryptonite: getValue(item.superpowerAndKryptonite) || '',
       whatCaughtAttention: getValue(item.whatCaughtAttention) || '',
       uniqueWorkStyle: getValue(item.uniqueWorkStyle) || '',

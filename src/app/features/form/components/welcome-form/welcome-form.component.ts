@@ -79,7 +79,7 @@ export class WelcomeFormComponent implements OnInit {
   energyAspects = ['Aspect 1', 'Aspect 2', 'Aspect 3', 'Aspect 4'];
 
   scenarioOptions = [
-    { value: 'public', label: 'A. ¿Corriges en público?' },
+    { value: 'public', label: 'A. ¿Lo corriges en público?' },
     { value: 'private', label: 'B. ¿Esperas a discutirlo en privado?' },
     {
       value: 'other',

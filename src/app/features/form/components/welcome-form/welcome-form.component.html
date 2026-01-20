@@ -547,7 +547,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Logros que te enorgullecen:
+                      Logros que te enorgullecen de esta experiencia:
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -576,7 +576,7 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      ¿Por qué decidiste cerrar ese ciclo?
+                      ¿Por qué decidiste cerrar este ciclo?
                       <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
@@ -706,28 +706,14 @@
                   <div class="form-field full-width">
                     <label class="form-label">
                       ¿Otro idioma?
-                      <span class="form-label-required">*</span>
                     </label>
                     <div class="form-input-wrapper">
                       <input
                         type="text"
                         formControlName="otherLanguage"
                         class="form-input"
-                        [class.invalid]="
-                          isFieldInvalid('otherLanguage', professionalInfoForm)
-                        "
                       />
                     </div>
-                    <span
-                      *ngIf="
-                        isFieldInvalid('otherLanguage', professionalInfoForm)
-                      "
-                      class="form-error"
-                    >
-                      {{
-                        getErrorMessage("otherLanguage", professionalInfoForm)
-                      }}
-                    </span>
                   </div>
                 </div>
 
@@ -825,7 +811,7 @@
 
             <div class="form-step-content" [formGroup]="additionalInfoForm">
               <h2 class="step-title">
-                Un poco más sobre tí (lo que no sale en una hoja de vida)
+                Un poco más sobre tí (lo que no sale en tu hoja de vida)
               </h2>
 
               <div class="form-section">
@@ -970,8 +956,8 @@
                 <div class="form-row">
                   <div class="form-field full-width">
                     <label class="form-label">
-                      Si supieras hacernos una pregunta para conocer a nuevos
-                      candidatos como tú... ¿qué sería? ¡Proponela! Nos encanta
+                      Si pudieras hacernos una pregunta para conocer a nuevos
+                      candidatos como tú... ¿Cuál sería? ¡Propónla! Nos encantaría
                       agregar nuevas ideas.
                       <span class="form-label-required">*</span>
                     </label>
@@ -1033,7 +1019,7 @@
             <ng-template matStepLabel>Energy & Scenario</ng-template>
 
             <div class="form-step-content" [formGroup]="energyScenarioForm">
-              <h2 class="step-title">En qué te gasta tu energía?</h2>
+              <h2 class="step-title">En qué te pones tu energía?</h2>
 
               <div class="form-section">
                 <p class="section-description">
@@ -1053,6 +1039,7 @@
                         <input
                           type="number"
                           formControlName="energyAspect1"
+                          [placeholder]="'Salario'"
                           min="0"
                           max="100"
                           class="form-input"
@@ -1086,6 +1073,7 @@
                         <input
                           type="number"
                           formControlName="energyAspect2"
+                          [placeholder]="'Aprendizaje y crecimiento'"
                           min="0"
                           max="100"
                           class="form-input"
@@ -1120,6 +1108,7 @@
                           type="number"
                           formControlName="energyAspect3"
                           min="0"
+                          [placeholder]="'Cultura y propósito'"
                           max="100"
                           class="form-input"
                           [class.invalid]="
@@ -1152,6 +1141,7 @@
                         <input
                           type="number"
                           formControlName="energyAspect4"
+                          [placeholder]="'Flexibilidad y bienestar'"
                           min="0"
                           max="100"
                           class="form-input"
@@ -1182,12 +1172,12 @@
 
               <div class="form-section">
                 <h4 class="section-title">
-                  Y si estuvieras en esta situación...
+                  Y si te tocara esta situación...
                 </h4>
                 <p class="scenario-text">
-                  Estás en una reunión con tu jefe y parte del equipo de gestión
-                  de Celerix. De repente, tu jefe proyecta algunos datos que
-                  sabes que son incorrectos. ¿Qué haces?
+                  Estás en una reunión con tu jefe y parte del equipo de directivo
+                  de Celerix. De repente, tu jefe proyecta unas cifras que
+                  sabes que son incorrectas. ¿Qué haces?
                 </p>
 
                 <div class="scenario-options">
