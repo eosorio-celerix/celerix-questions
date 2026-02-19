@@ -5,7 +5,10 @@
 
       <!-- Sección de búsqueda por documento -->
       <div class="search-section" *ngIf="!formFound">
-        <h2 class="search-title">Buscar información existente</h2>
+        <h2 class="search-title">Buscar información existente (Opcional)</h2>
+        <p class="search-description">
+          Si ya tienes información guardada, puedes buscarla. Si no, puedes continuar directamente con un nuevo formulario.
+        </p>
         <form [formGroup]="searchDocumentForm" (ngSubmit)="onSearchForm()">
           <div class="form-row">
             <div class="form-field full-width">
@@ -60,12 +63,33 @@
             </div>
           </div>
         </form>
+        <div class="skip-search-section">
+          <p class="skip-search-text">¿No tienes información guardada?</p>
+          <button
+            mat-stroked-button
+            color="primary"
+            type="button"
+            (click)="onNewForm()"
+            class="skip-search-button"
+          >
+            Continuar con nuevo formulario
+          </button>
+        </div>
       </div>
 
       <!-- Mensaje cuando se encuentra el formulario -->
       <div class="form-found-message" *ngIf="formFound">
         <mat-icon class="success-icon">check_circle</mat-icon>
         <p>Información encontrada. Puedes revisar y actualizar los datos.</p>
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="onNewForm()"
+          class="new-form-button"
+        >
+          Crear nuevo formulario
+        </button>
       </div>
 
       <!-- Formulario principal (stepper) -->

@@ -562,14 +562,24 @@ export class WelcomeFormComponent implements OnInit {
           this.formFound = true;
           this.loadFormData(formData);
         } else {
-          this.searchError = 'No se encontró información con ese documento.';
+          // Permitir crear nuevo formulario aunque no exista en la base de datos
+          this.searchError = null;
           this.formFound = false;
+          // Pre-llenar el documento de identidad en el formulario principal
+          this.personalInfoForm.patchValue({
+            identityDocument: identityDocument,
+          });
         }
       },
       error: (error) => {
         this.isSearching = false;
-        this.searchError =
-          'Error al buscar el formulario. Por favor intenta nuevamente.';
+        // Permitir continuar incluso si hay error en la búsqueda
+        this.searchError = null;
+        this.formFound = false;
+        // Pre-llenar el documento de identidad en el formulario principal
+        this.personalInfoForm.patchValue({
+          identityDocument: identityDocument,
+        });
         console.error('Error buscando formulario:', error);
       },
     });
