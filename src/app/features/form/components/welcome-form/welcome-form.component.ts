@@ -19,6 +19,9 @@ import {
   DateAdapter,
 } from '@angular/material/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { CustomDateAdapter } from '../../../../core/adapters/custom-date.adapter';
 import { CustomValidators } from '../../../../core/validators/custom.validators';
 import { FormService } from '../../../../core/services/form.service';
@@ -27,6 +30,10 @@ import {
   Country,
 } from '../../../../core/services/country.service';
 import { UserFormData } from '../../../../core/models/user-form.model';
+import { DynamoDBService } from '../../../../core/services/dynamodb.service';
+import { TermsAcceptanceRecord } from '../../../../core/models/terms-acceptance.model';
+
+const IPIFY_URL = 'https://api.ipify.org?format=json';
 
 @Component({
   selector: 'app-welcome-form',
@@ -75,6 +82,7 @@ export class WelcomeFormComponent implements OnInit {
   isSearching = false;
   searchError: string | null = null;
   formFound = false;
+  private termsAcceptanceSavedThisSession = false;
 
   energyAspects = ['Aspect 1', 'Aspect 2', 'Aspect 3', 'Aspect 4'];
 
@@ -114,7 +122,9 @@ export class WelcomeFormComponent implements OnInit {
     private fb: FormBuilder,
     private formService: FormService,
     private datePipe: DatePipe,
-    private countryService: CountryService
+    private countryService: CountryService,
+    private http: HttpClient,
+    private dynamoDB: DynamoDBService,
   ) {
     // Crear formulario de búsqueda
     this.searchDocumentForm = this.fb.group({
@@ -443,6 +453,8 @@ export class WelcomeFormComponent implements OnInit {
         ...this.answerQuestionForm.value,
       };
 
+      this.trySaveTermsAcceptanceOnce();
+
       this.formService.saveFormData(formData).subscribe({
         next: () => {
           this.isSubmitting = false;
@@ -484,18 +496,73 @@ export class WelcomeFormComponent implements OnInit {
       ...this.answerQuestionForm.value,
     };
 
+    this.trySaveTermsAcceptanceOnce();
+
     this.formService.saveFormData(formData).subscribe({
       next: () => {
         this.isSubmitting = false;
-        // Here you can add navigation to a success page or show a success message
         console.log('Form submitted successfully!', formData);
-        // Optionally: this.router.navigate(['/success']);
       },
       error: (error) => {
         console.error('Error submitting form:', error);
         this.isSubmitting = false;
         // Here you can show an error message to the user
       },
+    });
+  }
+
+  /**
+   * Guarda la aceptación de términos en DynamoDB una sola vez por sesión,
+   * cuando ya tengamos documento de identidad (al guardar el formulario en cualquier paso).
+   */
+  private trySaveTermsAcceptanceOnce(): void {
+    if (this.termsAcceptanceSavedThisSession) return;
+    const identityDocument = String(
+      this.personalInfoForm.get('identityDocument')?.value ?? ''
+    ).trim();
+    if (!identityDocument) return;
+    this.termsAcceptanceSavedThisSession = true;
+    this.saveTermsAcceptanceForUser(identityDocument);
+  }
+
+  private saveTermsAcceptanceForUser(identityDocument: string): void {
+    console.log('Guardando aceptación de términos para documento:', identityDocument);
+    this.getClientIp()
+      .pipe(
+        switchMap((ip) => {
+          const record: TermsAcceptanceRecord = {
+            id: this.generateId(),
+            acceptedAt: new Date().toISOString(),
+            accepted: true,
+            ip,
+            identityDocument,
+          };
+          return this.dynamoDB.saveTermsAcceptance(record);
+        }),
+        tap(() => console.log('Aceptación de términos guardada en DB')),
+        catchError((error) => {
+          console.error('Error guardando aceptación de términos (¿existe la tabla TermsAcceptances en DynamoDB?):', error);
+          return of(undefined);
+        })
+      )
+      .subscribe();
+  }
+
+  private getClientIp(): Observable<string> {
+    return this.http.get<{ ip: string }>(IPIFY_URL).pipe(
+      map((res) => res?.ip ?? 'unknown'),
+      catchError(() => of('unknown'))
+    );
+  }
+
+  private generateId(): string {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+      const r = (Math.random() * 16) | 0;
+      const v = c === 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
     });
   }
 

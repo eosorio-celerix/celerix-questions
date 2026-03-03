@@ -11,3 +11,9 @@ export const dynamoDBConfig = {
   // Opciones comunes: 'documento', 'id', 'documentoIdentidad', 'cedula', 'identityDocument'
   partitionKeyName: 'Cedula', // Cambia esto al nombre correcto de tu clave de partición
 };
+
+/** Tabla para registrar aceptaciones de Términos y Condiciones. Crear en AWS DynamoDB con PK "id" (String). */
+export const termsAcceptancesTable = {
+  tableName: 'TermsAcceptances',
+  partitionKeyName: 'id',
+};
