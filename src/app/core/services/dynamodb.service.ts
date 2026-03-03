@@ -6,8 +6,9 @@ import {
   PutCommand,
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
-import { awsConfig, dynamoDBConfig } from '../config/aws.config';
+import { awsConfig, dynamoDBConfig, termsAcceptancesTable } from '../config/aws.config';
 import { UserFormData } from '../models/user-form.model';
+import { TermsAcceptanceRecord } from '../models/terms-acceptance.model';
 import { Observable, from } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
@@ -82,17 +83,35 @@ export class DynamoDBService {
     );
   }
 
+  /**
+   * Convierte objetos Date a string ISO para que DynamoDB pueda serializarlos.
+   */
+  private serializeDatesForDynamo(obj: Record<string, any>): Record<string, any> {
+    const result: Record<string, any> = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (value instanceof Date) {
+        result[key] = value.toISOString();
+      } else if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+        result[key] = this.serializeDatesForDynamo(value);
+      } else {
+        result[key] = value;
+      }
+    }
+    return result;
+  }
+
   saveForm(formData: UserFormData): Observable<UserFormData> {
     // Crear el item directamente con todos los campos necesarios
     // Asegurarse de que la clave de partición esté presente con el nombre correcto
     // Cedula es numérico, convertir el string a número
     const partitionKey = String(dynamoDBConfig.partitionKeyName);
-    const item: Record<string, any> = {
+    const rawItem: Record<string, any> = {
       ...formData,
       [partitionKey]: parseInt(formData.identityDocument, 10),
       updatedAt: new Date().toISOString(),
       createdAt: new Date().toISOString(),
     };
+    const item = this.serializeDatesForDynamo(rawItem);
 
     console.log('Guardando en DynamoDB:', {
       TableName: dynamoDBConfig.tableName,
@@ -113,21 +132,51 @@ export class DynamoDBService {
     );
   }
 
+  saveTermsAcceptance(record: TermsAcceptanceRecord): Observable<void> {
+    const item: Record<string, unknown> = {
+      [termsAcceptancesTable.partitionKeyName]: record.id,
+      acceptedAt: record.acceptedAt,
+      accepted: record.accepted,
+      ip: record.ip,
+      identityDocument: record.identityDocument,
+      ...(record.userAgent != null && { userAgent: record.userAgent }),
+    };
+
+    console.log('Guardando aceptación de términos en DynamoDB:', {
+      TableName: termsAcceptancesTable.tableName,
+      Item: item,
+    });
+
+    const command = new PutCommand({
+      TableName: termsAcceptancesTable.tableName,
+      Item: item,
+    });
+
+    return from(this.docClient.send(command)).pipe(
+      map(() => undefined),
+      catchError((error) => {
+        console.error('Error guardando aceptación de términos en DynamoDB:', error);
+        throw error;
+      })
+    );
+  }
+
   updateForm(formData: UserFormData): Observable<UserFormData> {
     const updateExpressions: string[] = [];
     const expressionAttributeValues: any = {};
     const expressionAttributeNames: Record<string, string> = {};
+    const serialized = this.serializeDatesForDynamo(formData as Record<string, any>);
 
     // Agregar el nombre de la clave de partición a los nombres de atributos
     expressionAttributeNames['#partitionKey'] = dynamoDBConfig.partitionKeyName;
 
-    Object.keys(formData).forEach((key) => {
-      if (formData[key as keyof UserFormData] !== undefined) {
+    Object.keys(serialized).forEach((key) => {
+      if (serialized[key] !== undefined) {
         // Usar nombres de atributos para evitar problemas con caracteres especiales
         const attrName = `#attr_${key}`;
         expressionAttributeNames[attrName] = key;
         updateExpressions.push(`${attrName} = :${key}`);
-        expressionAttributeValues[`:${key}`] = formData[key as keyof UserFormData];
+        expressionAttributeValues[`:${key}`] = serialized[key];
       }
     });
 

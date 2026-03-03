@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.cx-terms-title {
+  margin: 16px 0 16px;
+  text-align: center;
+}
+
+.cx-terms-body {
+  max-height: 60vh;
+  overflow: auto;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.cx-terms-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
