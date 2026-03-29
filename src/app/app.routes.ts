@@ -4,11 +4,18 @@ import { WelcomeFormComponent } from './features/form/components/welcome-form/we
 export const routes: Routes = [
   {
     path: '',
-    component: WelcomeFormComponent
+    component: WelcomeFormComponent,
+  },
+  {
+    path: 'informes/:token',
+    loadComponent: () =>
+      import('./features/reports-portal/reports-portal.component').then(
+        (m) => m.ReportsPortalComponent
+      ),
   },
   {
     path: '**',
-    redirectTo: ''
-  }
+    redirectTo: '',
+  },
 ];
 

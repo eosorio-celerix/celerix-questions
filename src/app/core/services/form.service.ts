@@ -17,6 +17,10 @@ export class FormService {
     return this.dynamoDBService.getFormByIdentityDocument(identityDocument);
   }
 
+  listAllCandidates(): Observable<UserFormData[]> {
+    return this.dynamoDBService.listAllForms();
+  }
+
   saveFormData(data: UserFormData): Observable<UserFormData> {
     this.formData = { ...data };
     return this.dynamoDBService.saveForm(data);

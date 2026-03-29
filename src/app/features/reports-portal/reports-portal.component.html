@@ -1,0 +1,84 @@
+<div class="reports-wrap" *ngIf="authorized">
+  <mat-card class="reports-card">
+    <mat-card-header>
+      <mat-card-title>Portal de informes biográficos</mat-card-title>
+      <mat-card-subtitle>
+        Lista de candidatos registrados. Usa «Descargar informe» para obtener el PDF.
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="toolbar">
+        <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+          <mat-label>Buscar por nombre o documento</mat-label>
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            matInput
+            type="search"
+            [(ngModel)]="searchTerm"
+            name="reportSearch"
+            autocomplete="off"
+            placeholder="Ej: García o 1234567890"
+          />
+        </mat-form-field>
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          (click)="fetchCandidates()"
+          [disabled]="loading"
+        >
+          <mat-icon>refresh</mat-icon>
+          Actualizar lista
+        </button>
+      </div>
+
+      <div class="spinner-wrap" *ngIf="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span>Cargando candidatos…</span>
+      </div>
+
+      <p class="error" *ngIf="loadError && !loading">{{ loadError }}</p>
+
+      <div class="table-wrap" *ngIf="!loading && !loadError">
+        <table mat-table [dataSource]="filteredCandidates" class="candidates-table">
+          <ng-container matColumnDef="fullName">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let row">{{ row.fullName || '—' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="identityDocument">
+            <th mat-header-cell *matHeaderCellDef>Documento</th>
+            <td mat-cell *matCellDef="let row">{{ row.identityDocument || '—' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Correo</th>
+            <td mat-cell *matCellDef="let row">{{ row.email || '—' }}</td>
+          </ng-container>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="col-actions">Informe</th>
+            <td mat-cell *matCellDef="let row" class="col-actions">
+              <button
+                mat-mini-fab
+                color="primary"
+                type="button"
+                (click)="downloadReport(row)"
+                matTooltip="Descargar informe biográfico (PDF)"
+                aria-label="Descargar informe biográfico"
+              >
+                <mat-icon>picture_as_pdf</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <p class="empty" *ngIf="allCandidates.length === 0">
+          No hay registros en la tabla o el mapeo no devolvió candidatos visibles.
+        </p>
+        <p class="empty" *ngIf="allCandidates.length > 0 && filteredCandidates.length === 0">
+          Ningún candidato coincide con «{{ searchTerm.trim() }}». Prueba con otra parte del nombre
+          o del documento.
+        </p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

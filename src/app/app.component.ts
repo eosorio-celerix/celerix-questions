@@ -18,6 +18,13 @@ export class AppComponent implements OnInit {
   constructor(private readonly dialog: MatDialog) { }
 
   ngOnInit(): void {
+    if (
+      typeof window !== 'undefined' &&
+      window.location.pathname.includes('/informes/')
+    ) {
+      return;
+    }
+
     // if (typeof window !== 'undefined' && window.localStorage.getItem(TERMS_ACCEPTED_KEY)) {
     //   return;
     // }

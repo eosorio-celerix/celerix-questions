@@ -4,6 +4,7 @@ import {
   DynamoDBDocumentClient,
   GetCommand,
   PutCommand,
+  ScanCommand,
   UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { awsConfig, dynamoDBConfig, termsAcceptancesTable } from '../config/aws.config';
@@ -11,6 +12,28 @@ import { UserFormData } from '../models/user-form.model';
 import { TermsAcceptanceRecord } from '../models/terms-acceptance.model';
 import { Observable, from } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+
+async function scanTableAllPages(
+  docClient: DynamoDBDocumentClient,
+  tableName: string
+): Promise<Record<string, any>[]> {
+  const items: Record<string, any>[] = [];
+  let exclusiveStartKey: Record<string, any> | undefined;
+
+  do {
+    const command = new ScanCommand({
+      TableName: tableName,
+      ExclusiveStartKey: exclusiveStartKey,
+    });
+    const result = await docClient.send(command);
+    if (result.Items?.length) {
+      items.push(...result.Items);
+    }
+    exclusiveStartKey = result.LastEvaluatedKey;
+  } while (exclusiveStartKey);
+
+  return items;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -78,6 +101,24 @@ export class DynamoDBService {
           statusCode: error.$metadata?.httpStatusCode,
           requestId: error.$metadata?.requestId,
         });
+        throw error;
+      })
+    );
+  }
+
+  /**
+   * Lista todos los registros de la tabla de formularios (Scan paginado).
+   * En tablas muy grandes puede ser costoso; considerar índices o exportación desde AWS.
+   */
+  listAllForms(): Observable<UserFormData[]> {
+    return from(
+      scanTableAllPages(this.docClient, dynamoDBConfig.tableName)
+    ).pipe(
+      map((items) =>
+        items.map((item) => this.mapDynamoDBItemToFormData(item))
+      ),
+      catchError((error) => {
+        console.error('Error listando formularios desde DynamoDB:', error);
         throw error;
       })
     );

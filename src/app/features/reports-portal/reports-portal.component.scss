@@ -1,0 +1,61 @@
+.reports-wrap {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.reports-card {
+  mat-card-header {
+    margin-bottom: 1rem;
+  }
+}
+
+.toolbar {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  .search-field {
+    flex: 1 1 220px;
+    min-width: 200px;
+    max-width: 420px;
+  }
+
+  button mat-icon {
+    margin-right: 0.35rem;
+    vertical-align: middle;
+  }
+}
+
+.spinner-wrap {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.error {
+  color: #c62828;
+  margin: 1rem 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.candidates-table {
+  width: 100%;
+}
+
+.col-actions {
+  width: 100px;
+  text-align: center;
+}
+
+.empty {
+  margin-top: 1rem;
+  color: rgba(0, 0, 0, 0.6);
+}
